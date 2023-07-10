@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PostsController extends Controller
 {
@@ -14,9 +15,13 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::latest()->paginate(10);
-
-        return view('posts.index', compact('posts'));
+        if (!Gate::allows('index')) {
+            abort(403);
+        } else {
+            $posts = Post::latest()->paginate(10);
+    
+            return view('posts.index', compact('posts'));
+        }
     }
 
     /**
@@ -26,7 +31,11 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        if (!Gate::allows('create')) {
+            abort(403);
+        } else {
+            return view('posts.create');
+        }
     }
 
     /**
@@ -37,12 +46,16 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        Post::create(array_merge($request->only('title', 'description', 'body'),[
-            'user_id' => auth()->id()
-        ]));
+        if (!Gate::allows('create')) {
+            abort(403);
+        } else {
+            Post::create(array_merge($request->only('title', 'description', 'body'),[
+                'user_id' => auth()->id()
+            ]));
 
-        return redirect()->route('posts.index')
-            ->withSuccess(__('Post created successfully.'));
+            return redirect()->route('posts.index')
+                ->withSuccess(__('Post created successfully.'));
+        }
     }
 
     /**
@@ -53,9 +66,13 @@ class PostsController extends Controller
      */
     public function show(Post $post)
     {
-        return view('posts.show', [
-            'post' => $post
-        ]);
+        if (!Gate::allows('view')) {
+            abort(403);
+        } else {
+            return view('posts.show', [
+                'post' => $post
+            ]);
+        }
     }
 
     /**
@@ -66,9 +83,13 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.edit', [
-            'post' => $post
-        ]);
+        if (!Gate::allows('update')) {
+            abort(403);
+        } else {
+            return view('posts.edit', [
+                'post' => $post
+            ]);
+        }
     }
 
     /**
@@ -80,10 +101,14 @@ class PostsController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        $post->update($request->only('title', 'description', 'body'));
+        if (!Gate::allows('update')) {
+            abort(403);
+        } else {
+            $post->update($request->only('title', 'description', 'body'));
 
-        return redirect()->route('posts.index')
-            ->withSuccess(__('Post updated successfully.'));
+            return redirect()->route('posts.index')
+                ->withSuccess(__('Post updated successfully.'));
+        }
     }
 
     /**
@@ -94,9 +119,13 @@ class PostsController extends Controller
      */
     public function destroy(Post $post)
     {
-        $post->delete();
+        if (!Gate::allows('update')) {
+            abort(403);
+        } else {
+            $post->delete();
 
-        return redirect()->route('posts.index')
-            ->withSuccess(__('Post deleted successfully.'));
+            return redirect()->route('posts.index')
+                ->withSuccess(__('Post deleted successfully.'));
+        }
     }
 }
