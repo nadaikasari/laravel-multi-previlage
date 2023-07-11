@@ -2,14 +2,9 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Http\Controllers\RegisterController;
-use App\Http\Requests\RegisterRequest;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RegisterPolicyTest extends TestCase
+class RegisterControllerTest extends TestCase
 {
 
     public function testShowRegisterPage()
@@ -32,7 +27,6 @@ class RegisterPolicyTest extends TestCase
         ];
 
         $response = $this->post('/register', $requestData);
-
         
         $response->assertStatus(302); // Check if the response is a redirect
         $response->assertRedirect('/'); // Check if the user is redirected to the homepage
@@ -43,6 +37,5 @@ class RegisterPolicyTest extends TestCase
             'name' => 'John Doe',
             'email' => 'john@gmail.com',
         ]);
-        // $this->withoutExceptionHandling();
     }
 }
