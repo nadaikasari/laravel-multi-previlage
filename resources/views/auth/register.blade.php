@@ -9,6 +9,14 @@
         <h1 class="h3 mb-3 fw-normal">Register</h1>
 
         <div class="form-group form-floating mb-3">
+            <input type="text" class="form-control" name="name" value="{{ old('name') }}" placeholder="name" required="required" autofocus>
+            <label for="floatingName">name</label>
+            @if ($errors->has('name'))
+                <span class="text-danger text-left">{{ $errors->first('name') }}</span>
+            @endif
+        </div>
+
+        <div class="form-group form-floating mb-3">
             <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="name@example.com" required="required" autofocus>
             <label for="floatingEmail">Email address</label>
             @if ($errors->has('email'))
@@ -37,6 +45,14 @@
             <label for="floatingConfirmPassword">Confirm Password</label>
             @if ($errors->has('password_confirmation'))
                 <span class="text-danger text-left">{{ $errors->first('password_confirmation') }}</span>
+            @endif
+        </div>
+
+        <div class="form-group form-floating mb-3">
+            <input type="text" class="form-control" name="role_id" value="{{ old('role_id') }}" placeholder="Id Role" required="required" autofocus>
+            <label for="floatingName">Role Id</label>
+            @if ($errors->has('role_id'))
+                <span class="text-danger text-left">{{ $errors->first('role_id') }}</span>
             @endif
         </div>
 
