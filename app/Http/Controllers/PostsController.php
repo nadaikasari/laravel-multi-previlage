@@ -31,11 +31,11 @@ class PostsController extends Controller
      */
     public function create()
     {
-        // if (!Gate::allows('create')) {
-        //     abort(403);
-        // } else {
+        if (!Gate::allows('create')) {
+            abort(403);
+        } else {
             return view('posts.create');
-        // }
+        }
     }
 
     /**
