@@ -27,7 +27,7 @@ class PostPolicy
 
         return $getPermissions
                 ? Response::allow()
-                : Response::denyWithStatus(403);
+                : Response::denyWithStatus(404);
     }
 
     /**

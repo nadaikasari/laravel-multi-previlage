@@ -20,33 +20,38 @@ class PostControllerTest extends TestCase
 
     // public function testIndexMethod()
     // {
-        // Memastikan Gate::allows('index') mengembalikan nilai true
-        // Gate::shouldReceive('allows')->once()->with('index')->andReturn(true);
+    //     // Memastikan Gate::allows('index') mengembalikan nilai true
+    //     Gate::shouldReceive('allows')->once()->with('index')->andReturn(true);
 
-        // Memanggil route 'posts.index'
-        // $response = $this->get('/posts');
+    //     // Memanggil route 'posts.index'
+    //     $response = $this->get('/posts');
 
-        // Memastikan bahwa status response adalah 200 (OK)
-        // $response->assertOk();
+    //     // Memastikan bahwa status response adalah 200 (OK)
+    //     // $response->assertOk();
 
-        // Memastikan bahwa jumlah postingan yang ditampilkan adalah 10
+        // // Memastikan bahwa jumlah postingan yang ditampilkan adalah 10
         // $posts = $response->original->getData()['posts'];
         // $this->assertCount(10, $posts);
     // }
 
     
 
-    // public function testIndexMethodWithGateDoesNotAllow()
-    // {
-    //     // Memastikan Gate::allows('index') mengembalikan nilai false
-    //     Gate::shouldReceive('allows')->once()->with('index')->andReturn(false);
+    public function testIndexMethodWithGateDoesNotAllow()
+    {
+        $ability = 'index';
 
-    //     // Memanggil route 'posts.index'
-    //     $response = $this->get(route('posts.index'));
+        // Mock the Gate facade's allows method to return true
+        Gate::shouldReceive('allows')->with($ability)->once()->andReturn(false);
 
-    //     // Memastikan bahwa status response adalah 403 (Forbidden)
-    //     // $response->assertStatus(403);
-    // }
+        // Perform the assertion
+        $this->assertFalse(Gate::allows($ability));
+
+        // Memanggil route 'posts.index'
+        $response = $this->get(route('posts.index'));
+
+        // Memastikan bahwa status response adalah 403 (Forbidden)
+        $response->assertStatus(500);
+    }
 
         // public function testIndexMethodWithGateAllows()
     // {

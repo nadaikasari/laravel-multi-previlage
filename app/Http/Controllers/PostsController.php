@@ -15,12 +15,12 @@ class PostsController extends Controller
      */
     public function index()
     {
-        if (!Gate::allows('index')) {
-            abort(403);
-        } else {
+        if (Gate::allows('index')) {
             $posts = Post::latest()->paginate(10);
-    
+            
             return view('posts.index', compact('posts'));
+        } else if (!Gate::denies('index')){
+           abort(404);
         }
     }
 
