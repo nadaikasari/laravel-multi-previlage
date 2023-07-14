@@ -23,9 +23,9 @@ class PostPolicy
         $permission = "Index";
 
         $getPermissions = RolePermissions::where('permissions', $permission)
-                                ->where('role_id', $user->role_id)->firstOrFail();;
+                                ->where('role_id', $user->role_id)->count();
 
-        return $getPermissions
+        return $getPermissions == 1
                 ? Response::allow()
                 : Response::denyWithStatus(404);
     }
@@ -46,7 +46,7 @@ class PostPolicy
 
         return $getPermissions
                 ? Response::allow()
-                : Response::denyWithStatus(404);
+                : "ini di block";
     }
 
     /**

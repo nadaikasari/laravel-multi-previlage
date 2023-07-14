@@ -5,71 +5,55 @@ namespace Tests\Feature\Http\Controllers;
 use Illuminate\Support\Facades\Gate;
 use Tests\TestCase;
 use App\Models\Post;
-use App\Policies\PostPolicy;
-use Illuminate\Support\Facades\View;
 
 class PostControllerTest extends TestCase
 {
 
-    public function test_the_application_returns_a_successful_response()
+    public function testIndexMethodWithGateAllows()
     {
-        $response = $this->get('/');
+        $ability = 'index';
+        Gate::shouldReceive('allows')->with($ability)->once()->andReturn(true);
+        $this->assertTrue(Gate::allows($ability));
 
+        $posts = Post::factory()->count(3)->create();
+        $response = $this->get('/posts');
         $response->assertStatus(200);
+        $response->assertViewIs('posts.index');
+        $response->assertViewHas('posts', $posts);
     }
-
-    // public function testIndexMethod()
-    // {
-    //     // Memastikan Gate::allows('index') mengembalikan nilai true
-    //     Gate::shouldReceive('allows')->once()->with('index')->andReturn(true);
-
-    //     // Memanggil route 'posts.index'
-    //     $response = $this->get('/posts');
-
-    //     // Memastikan bahwa status response adalah 200 (OK)
-    //     // $response->assertOk();
-
-        // // Memastikan bahwa jumlah postingan yang ditampilkan adalah 10
-        // $posts = $response->original->getData()['posts'];
-        // $this->assertCount(10, $posts);
-    // }
-
-    
 
     public function testIndexMethodWithGateDoesNotAllow()
     {
-        $ability = 'index';
-
-        // Mock the Gate facade's allows method to return true
-        Gate::shouldReceive('allows')->with($ability)->once()->andReturn(false);
-
-        // Perform the assertion
-        $this->assertFalse(Gate::allows($ability));
-
-        // Memanggil route 'posts.index'
         $response = $this->get(route('posts.index'));
 
-        // Memastikan bahwa status response adalah 403 (Forbidden)
-        $response->assertStatus(500);
+        $ability = 'index';
+        Gate::shouldReceive('allows')->with($ability)->once()->andReturn(false);
+        $this->assertFalse(Gate::allows($ability));
+
+        $response->assertStatus(404);
     }
 
-        // public function testIndexMethodWithGateAllows()
-    // {
-        
-        // Gate::shouldReceive('denies')->with('index')->andReturn(true)->once();;
-        // $response = $this->get('/posts')->assertStatus(403);
+    public function testCreateMethodWithGateAllows()
+    {
+        $response = $this->get('/posts/create');
 
-        // Create sample posts
-        // $posts = Post::factory()->count(5)->create();
+        $ability = 'create';
+        Gate::shouldReceive('allows')->with($ability)->once()->andReturn(true);
+        $this->assertTrue(Gate::allows($ability));
 
-        // Mock the view and make sure it is being called with the correct data
-        // View::shouldReceive('make')->with('posts.index', compact('posts'))->once()->andReturn('mocked_view');
+        $response->assertOk();
+        $response->assertViewIs('post.create');
+    }
 
-        // Make a GET request to the index route
-        // $response = $this->get('/posts');
+    public function testCreateMethodWithGateDoesNotAllow()
+    {
+        $ability = 'create';
+        Gate::shouldReceive('allows')->with($ability)->once()->andReturn(false);
+        $this->assertFalse(Gate::allows($ability));
 
-        // Assert that the response is the mocked view
-        // $response->assertViewIs('mocked_view');
-    // }
+        $response = $this->get(route('posts.create'));
+
+        $response->assertStatus(404);
+    }
 
 }

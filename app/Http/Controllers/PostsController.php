@@ -16,11 +16,11 @@ class PostsController extends Controller
     public function index()
     {
         if (Gate::allows('index')) {
-            $posts = Post::latest()->paginate(10);
+            $posts = Post::all();
             
             return view('posts.index', compact('posts'));
-        } else if (!Gate::denies('index')){
-           abort(404);
+        } else {
+            abort(404);
         }
     }
 
@@ -31,11 +31,11 @@ class PostsController extends Controller
      */
     public function create()
     {
-        if (!Gate::allows('create')) {
-            abort(403);
-        } else {
+        // if (!Gate::allows('create')) {
+        //     abort(403);
+        // } else {
             return view('posts.create');
-        }
+        // }
     }
 
     /**
