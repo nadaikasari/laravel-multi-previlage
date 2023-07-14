@@ -42,11 +42,11 @@ class PostPolicy
         $permission = "View";
 
         $getPermissions = RolePermissions::where('permissions', $permission)
-                                ->where('role_id', $user->role_id)->firstOrFail();;
+                                ->where('role_id', $user->role_id)->count();
 
-        return $getPermissions
+        return $getPermissions == 1
                 ? Response::allow()
-                : "ini di block";
+                : Response::denyWithStatus(404);
     }
 
     /**
@@ -60,9 +60,9 @@ class PostPolicy
         $permission = "Create";
 
         $getPermissions = RolePermissions::where('permissions', $permission)
-                                ->where('role_id', $user->role_id)->firstOrFail();;
+                                ->where('role_id', $user->role_id)->count();
 
-        return $getPermissions
+        return $getPermissions == 1
                 ? Response::allow()
                 : Response::denyWithStatus(404);
     }
@@ -79,9 +79,9 @@ class PostPolicy
         $permission = "Update";
 
         $getPermissions = RolePermissions::where('permissions', $permission)
-                                ->where('role_id', $user->role_id)->firstOrFail();;
+                                ->where('role_id', $user->role_id)->count();
 
-        return $getPermissions
+        return $getPermissions == 1
                 ? Response::allow()
                 : Response::denyWithStatus(404);
     }
@@ -98,9 +98,9 @@ class PostPolicy
         $permission = "Delete";
 
         $getPermissions = RolePermissions::where('permissions', $permission)
-                                ->where('role_id', $user->role_id)->firstOrFail();;
+                                ->where('role_id', $user->role_id)->count();
 
-        return $getPermissions
+        return $getPermissions == 1
                 ? Response::allow()
                 : Response::denyWithStatus(404);
     }

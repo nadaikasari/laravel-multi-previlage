@@ -20,7 +20,7 @@ class PostsController extends Controller
             
             return view('posts.index', compact('posts'));
         } else {
-            abort(404);
+            abort(403);
         }
     }
 
