@@ -16,7 +16,7 @@ class PostsController extends Controller
     public function index()
     {
         if (Gate::allows('index')) {
-            $posts = Post::all();
+            $posts = Post::latest()->paginate(10);
             
             return view('posts.index', compact('posts'));
         } else {
